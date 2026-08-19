@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Form View -->
+    <record id="view_trafo_production_form" model="ir.ui.view">
+        <field name="name">trafo.production.form</field>
+        <field name="model">trafo.production</field>
+        <field name="arch" type="xml">
+            <form string="Order Produksi Trafo">
+                <header>
+                    <button name="action_start_production" type="object"
+                            string="Mulai Produksi" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_send_to_qc" type="object"
+                            string="Kirim ke QC" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_done" type="object"
+                            string="Selesaikan" class="btn-primary"
+                            invisible="state != 'quality_check'"/>
+                    <button name="action_cancel" type="object"
+                            string="Batalkan"
+                            invisible="state in ('done', 'cancel')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Set ke Draft"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,quality_check,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="capacity_kva"/>
+                            <field name="quantity"/>
+                            <field name="responsible_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date" readonly="1"/>
+                            <field name="end_date" readonly="1"/>
+                            <field name="unit_cost"/>
+                            <field name="total_cost"/>
+                            <field name="quality_passed"/>
+                            <field name="notes" placeholder="Catatan pembatalan / Tambahan"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Check">
+                            <field name="quality_check_ids">
+                                <tree editable="bottom">
+                                    <field name="check_name"/>
+                                    <field name="result"/>
+                                    <field name="checked_by"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Tree View -->
+    <record id="view_trafo_production_list" model="ir.ui.view">
+        <field name="name">trafo.production.list</field>
+        <field name="model">trafo.production</field>
+        <field name="arch" type="xml">
+            <tree string="Order Produksi Trafo" 
+                  decoration-success="state == 'done'"
+                  decoration-danger="state == 'cancel'"
+                  decoration-info="state == 'in_progress'">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="capacity_kva"/>
+                <field name="quantity"/>
+                <field name="responsible_id"/>
+                <field name="total_cost" sum="Total"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Search View (GROUP BY CAPACITY_KVA SUDAH DIHAPUS) -->
+    <record id="view_trafo_production_search" model="ir.ui.view">
+        <field name="name">trafo.production.search</field>
+        <field name="model">trafo.production</field>
+        <field name="arch" type="xml">
+            <search string="Cari Order Produksi">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="responsible_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('state','=','draft')]"/>
+                <filter string="Dalam Produksi" name="filter_in_progress" domain="[('state','=','in_progress')]"/>
+                <filter string="Selesai" name="filter_done" domain="[('state','=','done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Produk" name="group_product" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_trafo_production" model="ir.actions.act_window">
+        <field name="name">Order Produksi Trafo</field>
+        <field name="res_model">trafo.production</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_trafo_production_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat order produksi trafo pertama Anda
+            </p>
+        </field>
+    </record>
+    
+    
+    
+    <record id="action_trafo_production_form" model="ir.actions.act_window">
+        <field name="name">Data Produksi Trafo</field>
+        <field name="res_model">trafo.production</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_trafo_production_form"/>
+    </record>
+</odoo>

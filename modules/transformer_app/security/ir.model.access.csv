@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_trafo_production_user,trafo.production.user,model_trafo_production,base.group_user,1,1,1,0
+access_trafo_production_manager,trafo.production.manager,model_trafo_production,base.group_system,1,1,1,1
+access_trafo_quality_check_user,trafo.quality.check.user,model_trafo_quality_check,base.group_user,1,1,1,0
+access_trafo_quality_check_manager,trafo.quality.check.manager,model_trafo_quality_check,base.group_system,1,1,1,1

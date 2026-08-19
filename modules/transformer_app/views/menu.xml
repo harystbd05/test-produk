@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <menuitem id="menu_trafo_root"
+              name="Produksi Trafo"
+              sequence="10"/>
+    
+    <menuitem id="menu_trafo_production"
+              name="Order Produksi"
+              parent="menu_trafo_root"
+              action="action_trafo_production"
+              sequence="10"/>
+    
+</odoo>

@@ -1,0 +1,19 @@
+//Build
+docker compose up -d
+
+
+//docker restart
+docker restart odoo-web
+
+
+//masuk ke database
+docker exec -it odoo-db psql -U user -d odoo    
+
+//install modul
+docker exec -it odoo-web odoo -c /etc/odoo/odoo.conf -i transformer_app -d odoo --stop-after-init
+
+//update modul
+docker exec -it odoo-web odoo -c /etc/odoo/odoo.conf -u transformer_app -d odoo --stop-after-init
+
+//cek logs
+docker logs -f odoo-web
